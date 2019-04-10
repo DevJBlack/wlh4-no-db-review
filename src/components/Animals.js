@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 
 import Animal from './Animal'
+import CreateAnimalForm from './CreateAnimalForm'
 
 export default class Animals extends Component {
   constructor() {
@@ -20,11 +21,22 @@ export default class Animals extends Component {
     }).catch(err => console.log('we have a problem:', err))
   }
 
+  createAnimal = (newAnimal) => {
+    axios.post('/api/animals', newAnimal).then(res => {
+      this.setState({
+        animals: res.data
+      })
+    }).catch(err => console.log('we have a problem:', err))
+  }
+
   render() {
     return (
-      this.state.animals.map(animal => {
-        return <Animal key={animal.id} animal={animal}/>
-      })
+      <div>
+        <CreateAnimalForm createAnimal={this.createAnimal}/>
+        {this.state.animals.map(animal => {
+          return <Animal key={animal.id} animal={animal}/>
+        })}
+      </div>
     )
   }
 }
